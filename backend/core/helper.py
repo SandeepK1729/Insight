@@ -17,7 +17,9 @@ from sklearn.metrics            import accuracy_score, confusion_matrix, precisi
 
 from sklearn.datasets           import *
 
-from pickle                     import load, dump
+from pickle                     import load, dumps
+
+from pathlib import Path
 
 datasets_list = {
     "iris.csv"      : {
@@ -26,23 +28,54 @@ datasets_list = {
     }
 }
 
-def give_analysis_report(model_name: str, dataset_name: str):
+from .models import Dataset, ModelFile
+
+from django.conf            import settings
+
+
+def get_trained_model(model_name: str, dataset_id: int, knn_val: int):
     """gives the report of model on analysis of dataset
 
     Args:
         model_name (str): name of the model
-        dataset_name (str): name of the dataset
+        dataset_id (int): unique id of the dataset
+        knn_val    (int): knearestneighbour val
+
+    Returns:
+        obj: returns the model trained object
+    """
+    
+    features, target = get_dataset(dataset_id)
+    
+    model = get_model(model_name, knn_val)
+    model.fit(features, target)           # model training 
+
+    return dumps(model)
+    
+    file_path = Path.joinpath(
+                    settings.MODEL_PATH_FIELD_DIRECTORY,
+                    f"{model_name} trained on dataset-{dataset_id}.pkl"
+                )
+    dump(model, open(file_path, 'wb'))
+    return file_path    
+
+def give_analysis_report(model_path: str, dataset_id: int):
+    """gives the report of model on analysis of dataset
+
+    Args:
+        model_path (str): path of the model
+        dataset_id (int): unique id of the dataset
 
     Returns:
         dict: gives report of dictionary
     """
     
-    features, target = get_dataset(dataset_name)
+    features, target = get_dataset(dataset_id)
     X_train, X_test, y_train, y_test = train_test_split(features, target, test_size = 0.2, random_state = 109)
     
-    model = get_model(model_name)
-    model.fit(X_train, y_train)           # model training 
-
+    with open(model_path) as model_file:
+        model = load(model_file)
+    
     y_pred = model.predict(X_test)        # making prediction
     
     res = {
@@ -60,22 +93,23 @@ def give_analysis_report(model_name: str, dataset_name: str):
 
     return res
 
-def get_dataset(dataset_name: str):
+def get_dataset(dataset_id: str):
     """returns the features and target columns of dataset
 
     Args:
-        dataset_name (str): name of the dataset
+        dataset_id (int): unique id of the dataset
 
     Returns:
         (pd.DataFrame, pd.DataFrame): tuple of features dataframe and target dataframe or series
     """
 
-    dataset = datasets_list[dataset_name]
-    df      = pd.read_csv(dataset['path'])
+    dataset = Dataset.objects.get(id = dataset_id)
+    df      = pd.read_csv(dataset.path)
+    target  = dataset.targets.keys()
 
-    y       = df[dataset['target']]
+    y       = df[target]
     X       = df.drop(
-                dataset['target'],
+                target,
                 axis = 1
             )
 
@@ -94,12 +128,12 @@ def get_model(model_name, neighbors = 0):
     """
 
     models = {
-        "svm"                   : SVC(),
-        "decisionTree"          : GaussianNB(),
-        "randomForest"          : RandomForestClassifier(n_estimators = 25),
-        "naiveBayes"            : DecisionTreeClassifier(),
+        "decisionTree"          : DecisionTreeClassifier(),
         "knn"                   : KNeighborsClassifier(n_neighbors = int(neighbors)),
         "logisticRegression"    : LogisticRegression(random_state = 0),
+        "naiveBayes"            : GaussianNB(),
+        "randomForest"          : RandomForestClassifier(n_estimators = 25),
+        "svm"                   : SVC(),
     }
     
     return models[model_name]
