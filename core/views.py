@@ -100,7 +100,7 @@ class ModelResponseView(APIView):
     def get(self, request):
         try:
             model_name  = request.GET.get('model_name')
-            dataset_id  = request.GET.get('dataset')
+            dataset_id  = request.GET.get('dataset_id')
             dataset     = Dataset.objects.get(id = dataset_id)
             
             modelFileRecord = ModelFile.objects.get(model_name = model_name, dataset = dataset)
