@@ -49,6 +49,7 @@ ROOT_URLCONF = 'Insight.urls'
 STATIC_URL  = '/static/'
 STATIC_ROOT = Path.joinpath(BASE_DIR, 'static_cdn')
 
+TEMP_STATIC_ROOT = Path.joinpath(BASE_DIR, 'static')
 MEDIA_URL   = '/media/'
 MEDIA_ROOT  = Path.joinpath(BASE_DIR, 'static/media')
 

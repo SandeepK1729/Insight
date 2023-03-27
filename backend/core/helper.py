@@ -19,7 +19,10 @@ from sklearn.datasets           import *
 
 from pickle                     import load, dumps
 
-from pathlib import Path
+from .models                    import Dataset, ModelFile
+from django.conf                import settings
+
+from pathlib                    import Path
 
 datasets_list = {
     "iris.csv"      : {
@@ -27,11 +30,6 @@ datasets_list = {
         "target"    : "Outcome",
     }
 }
-
-from .models import Dataset, ModelFile
-
-from django.conf            import settings
-
 
 def get_trained_model(model_name: str, dataset_id: int, knn_val: int):
     """gives the report of model on analysis of dataset
@@ -42,7 +40,7 @@ def get_trained_model(model_name: str, dataset_id: int, knn_val: int):
         knn_val    (int): knearestneighbour val
 
     Returns:
-        obj: returns the model trained object
+        obj: returns the model trained object in some of file content
     """
     
     features, target = get_dataset(dataset_id)
@@ -51,19 +49,12 @@ def get_trained_model(model_name: str, dataset_id: int, knn_val: int):
     model.fit(features, target)           # model training 
 
     return dumps(model)
-    
-    file_path = Path.joinpath(
-                    settings.MODEL_PATH_FIELD_DIRECTORY,
-                    f"{model_name} trained on dataset-{dataset_id}.pkl"
-                )
-    dump(model, open(file_path, 'wb'))
-    return file_path    
 
-def give_analysis_report(model_path: str, dataset_id: int):
+def give_analysis_report(model_file, dataset_id):
     """gives the report of model on analysis of dataset
 
     Args:
-        model_path (str): path of the model
+        model_file (file): file of the model
         dataset_id (int): unique id of the dataset
 
     Returns:
@@ -71,15 +62,13 @@ def give_analysis_report(model_path: str, dataset_id: int):
     """
     
     features, target = get_dataset(dataset_id)
-    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size = 0.2, random_state = 109)
+    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size = 0.2)
     
-    with open(model_path) as model_file:
-        model = load(model_file)
+    model = load(model_file)
     
     y_pred = model.predict(X_test)        # making prediction
     
     res = {
-        "title"                 : f"Classfication using {model_name} on {dataset_name}",
         "accuracy"              : f"{accuracy_score(y_test, y_pred)}",
         "Precision Score"       : f"{precision_score(y_test, y_pred, average = 'micro')}",
         "Recall Score"          : f"{recall_score(y_test, y_pred, average = 'micro')}",
@@ -128,12 +117,12 @@ def get_model(model_name, neighbors = 0):
     """
 
     models = {
-        "decisionTree"          : DecisionTreeClassifier(),
-        "knn"                   : KNeighborsClassifier(n_neighbors = int(neighbors)),
-        "logisticRegression"    : LogisticRegression(random_state = 0),
-        "naiveBayes"            : GaussianNB(),
-        "randomForest"          : RandomForestClassifier(n_estimators = 25),
-        "svm"                   : SVC(),
+        "Decision Tree Classifier"          : DecisionTreeClassifier(),
+        "K-Nearest Neighbors Classifier"    : KNeighborsClassifier(n_neighbors = int(neighbors)),
+        "Logistic Regression"               : LogisticRegression(random_state = 0),
+        "Gaussian Naive Bayes Classifier"   : GaussianNB(),
+        "Random Forest Classifier"          : RandomForestClassifier(n_estimators = 25),
+        "Support Vector Machine"            : SVC(),
     }
     
     return models[model_name]

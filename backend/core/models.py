@@ -2,12 +2,12 @@ from django.db import models
 from django.conf import settings
 
 models_list = [
-    ("decisionTree"         , "Decision Tree Classifier"),
-    ("knn"                  , "K-Nearest Neighbors Classifier"),
-    ("logisticRegression"   , "Logistic Regression"),
-    ("naiveBayes"           , "Gaussian Naive Bayes Classifier"),
-    ("randomForest"         , "Random Forest Classifier"),
-    ("svm"                  , "Support Vector Machine"),
+    ("Decision Tree Classifier"         , "Decision Tree Classifier"),
+    ("K-Nearest Neighbors Classifier"   , "K-Nearest Neighbors Classifier"),
+    ("Logistic Regression"              , "Logistic Regression"),
+    ("Gaussian Naive Bayes Classifier"  , "Gaussian Naive Bayes Classifier"),
+    ("Random Forest Classifier"         , "Random Forest Classifier"),
+    ("Support Vector Machine"           , "Support Vector Machine"),
 ]
 
 class Dataset(models.Model):
@@ -17,7 +17,7 @@ class Dataset(models.Model):
     targets     = models.JSONField(default = dict)
 
     def __str__(self):
-        return self.name
+        return f"{self.name} dataset {self.id}"
 
 class ModelFile(models.Model):
     model_name  = models.CharField(
