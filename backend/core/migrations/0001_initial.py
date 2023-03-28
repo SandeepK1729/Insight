@@ -6,30 +6,84 @@ import pathlib
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='Dataset',
+            name="Dataset",
             fields=[
-                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('name', models.CharField(max_length=30, unique=True)),
-                ('path', models.FileField(upload_to='datasets')),
-                ('features', models.JSONField(default=dict)),
-                ('targets', models.JSONField(default=dict)),
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                ("name", models.CharField(max_length=30, unique=True)),
+                ("path", models.FileField(upload_to="datasets")),
+                ("features", models.JSONField(default=dict)),
+                ("targets", models.JSONField(default=dict)),
             ],
         ),
         migrations.CreateModel(
-            name='ModelFile',
+            name="ModelFile",
             fields=[
+<<<<<<< HEAD
                 ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
                 ('model_name', models.CharField(choices=[('Decision Tree Classifier', 'Decision Tree Classifier'), ('K-Nearest Neighbors Classifier', 'K-Nearest Neighbors Classifier'), ('Logistic Regression', 'Logistic Regression'), ('Gaussian Naive Bayes Classifier', 'Gaussian Naive Bayes Classifier'), ('Random Forest Classifier', 'Random Forest Classifier'), ('Support Vector Machine', 'Support Vector Machine')], default='K-Nearest Neighbors Classifier', max_length=50)),
                 ('model_obj', models.FileField(null=True, upload_to=pathlib.PureWindowsPath('D:/Projectz/Insight/backend/static/media/saved_models'))),
                 ('dataset', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='core.dataset')),
+=======
+                (
+                    "id",
+                    models.BigAutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "model_name",
+                    models.CharField(
+                        choices=[
+                            ("Decision Tree Classifier", "Decision Tree Classifier"),
+                            (
+                                "K-Nearest Neighbors Classifier",
+                                "K-Nearest Neighbors Classifier",
+                            ),
+                            ("Logistic Regression", "Logistic Regression"),
+                            (
+                                "Gaussian Naive Bayes Classifier",
+                                "Gaussian Naive Bayes Classifier",
+                            ),
+                            ("Random Forest Classifier", "Random Forest Classifier"),
+                            ("Support Vector Machine", "Support Vector Machine"),
+                        ],
+                        default="K-Nearest Neighbors Classifier",
+                        max_length=50,
+                    ),
+                ),
+                (
+                    "model_obj",
+                    models.FileField(
+                        null=True,
+                        upload_to=pathlib.PurePosixPath(
+                            "/workspaces/insight/backend/static/media/saved_models"
+                        ),
+                    ),
+                ),
+                (
+                    "dataset",
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to="core.dataset"
+                    ),
+                ),
+>>>>>>> ec24d4c7aa8d36b211bbe2b9d1d586680224ba57
             ],
         ),
     ]
