@@ -24,12 +24,6 @@ from django.conf                import settings
 
 from pathlib                    import Path
 
-datasets_list = {
-    "iris.csv"      : {
-        "path"      : "datasets/diabetes.csv",
-        "target"    : "Outcome",
-    }
-}
 
 def get_trained_model(model_name: str, dataset_id: int, knn_val: int):
     """gives the report of model on analysis of dataset
@@ -69,9 +63,9 @@ def give_analysis_report(model_file, dataset_id):
     y_pred = model.predict(X_test)        # making prediction
     
     res = {
-        "accuracy"              : f"{accuracy_score(y_test, y_pred)}",
-        "Precision Score"       : f"{precision_score(y_test, y_pred, average = 'micro')}",
-        "Recall Score"          : f"{recall_score(y_test, y_pred, average = 'micro')}",
+        "accuracy"              : f"{int(accuracy_score(y_test, y_pred) * 100)}",
+        "Precision Score"       : f"{int(precision_score(y_test, y_pred, average = 'micro') * 100)}",
+        "Recall Score"          : f"{int(recall_score(y_test, y_pred, average = 'micro') * 100)}",
     }
     
     # plt.title(f"Classfication using {model_name} on {dataset_name}")

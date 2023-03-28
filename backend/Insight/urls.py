@@ -8,7 +8,7 @@ from core import urls as coreUrls
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('', include(coreUrls)),
+    path('api/', include(coreUrls)),
 ]
 
 if settings.DEBUG:

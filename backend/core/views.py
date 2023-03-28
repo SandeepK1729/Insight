@@ -20,9 +20,11 @@ def apiOverview(request):
     """
     host = request.get_host()
     return Response({
-        'datasets'      : f"http://{host}/datasets",
-        'models'        : f"http://{host}/models",
-        'predict'       : f"http://{host}/predict",
+        'datasets'          : f"http://{host}/api/datasets",
+        'dataset detail'    : f"http://{host}/api/dataset/pk:int",
+        
+        'models'            : f"http://{host}/api/models",
+        'predict'           : f"http://{host}/api/predict",
         
     })
 
@@ -32,6 +34,104 @@ class DatasetViewSet(viewsets.ModelViewSet):
     """
     queryset = Dataset.objects.all()
     serializer_class = DatasetSerializer
+
+class DatasetDetailView(APIView):
+    """
+        Perform put, delete, update operations on particular dataset 
+    """
+    def get(self, request, pk):
+        """Give Detailed view of particular dataset based on ID
+
+        Args:
+            request (client request): contains data from client
+            pk (int): primary key or id of dataset
+
+        Returns:
+            JSON: returns view of dataset in JSON i.e, Java Script Object Notation format
+        """
+        try:
+            res = DatasetSerializer(
+                    Dataset.objects.get(id = pk)
+                ).data
+        except Exception as e:
+            res = f"Unable to load dataset details, beacuase {e}"
+
+        return Response(res)
+
+    def delete(self, request, pk):
+        """delete a particular dataset
+
+        Args:
+            request (client request): contains client info
+            pk (int): primary key of dataset
+
+        Returns:
+            JSON: message about transaction
+        """
+        try:
+            dataset = Dataset.objects.get(id = pk)
+            dataset.delete()
+
+            res = "Dataset deleted Succefully"
+        except Exception as e:
+            res = f"Unable to delete dataset, because {e}"
+        
+        return Response(res)
+
+    def put(self, request, pk):
+        """updates the specific dataset, if exist
+           creates new, if not exit
+
+        Args:
+            request (client request): contains client data
+            pk (int): primary key of dataset
+
+        Returns:
+            JSON: acknowledgement message
+        """
+        res = ""
+        try:
+            dataset = Dataset.objects.filter(id = pk)
+            
+            serializer = DatasetSerializer(dataset.first(), data = request.data)
+            
+            if serializer.is_valid():
+                serializer.save()
+                
+                res = "Dataset updated successfully"
+            else:
+                res = "Unable to update dataset"
+                
+        except Exception as e:
+            res = f"Unable to update dataset, because {e}"
+    
+        return Response(res)
+
+    def patch(self, request, pk):
+        """updates the specific dataset
+
+        Args:
+            request (client request): contains client data
+            pk (int): primary key of dataset
+
+        Returns:
+            JSON: acknowledgement message
+        """
+        res = ""
+        try:
+            dataset = Dataset.objects.get(id = pk)
+            serializer = DatasetSerializer(dataset, data = request.data, partial = True)
+
+            if serializer.is_valid():
+                serializer.save()
+                
+                res = "Dataset updated successfully"
+            else:
+                res = "Unable to update dataset"
+        except Exception as e:
+            res = f"Unable to update dataset, because {e}"
+    
+        return Response(res)
 
 class ModelFileView(APIView):
     """
@@ -119,7 +219,4 @@ class ModelResponseView(APIView):
             return Response(f"Unable to find model, due to Exception {e}")   
 
         return Response(res)
-
-
-
 
