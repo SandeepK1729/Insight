@@ -162,47 +162,81 @@ class ModelFileView(APIView):
         Returns:
             Response: answer about creation of model
         """
-        # try:
-        model_name  = request.data.get('model_name')
-        dataset_id  = request.data.get('dataset_id')
-        dataset     = Dataset.objects.get(id = dataset_id)
+        try:
+            model_name  = request.data.get('model_name')
+            dataset_id  = request.data.get('dataset_id')
+            dataset     = Dataset.objects.get(id = dataset_id)
 
-        if ModelFile.objects.filter(model_name = model_name, dataset = dataset).count() > 0:
-            return Response("Model already exist")
-        
-        modelFileRecord = ModelFile(
-                            model_name = model_name,
-                            dataset = dataset,
-                            
-                        )
-        
-        modelFileRecord.model_obj.save(
-            f"{model_name} trained on {dataset.name} dataset - {dataset_id}.pkl",
-            ContentFile(
-                get_trained_model(
-                    model_name,
-                    dataset_id,
-                    request.data.get('knn_val', 0),
+            if ModelFile.objects.filter(model_name = model_name, dataset = dataset).count() > 0:
+                return Response("Model already exist")
+            
+            modelFileRecord = ModelFile(
+                                model_name = model_name,
+                                dataset = dataset,
+                                
+                            )
+            
+            modelFileRecord.model_obj.save(
+                f"{model_name} trained on {dataset.name} dataset - {dataset_id}.pkl",
+                ContentFile(
+                    get_trained_model(
+                        model_name,
+                        dataset_id,
+                        request.data.get('knn_val', 0),
+                    )
                 )
             )
-        )
 
-        modelFileRecord.save()
+            modelFileRecord.save()
 
-        response = "Successfully added dataset"
-        # except Exception as e:
-        #     response = f"Unable to add dataset, due to Exception {e}"
+            response = "Successfully added dataset"
+        except Exception as e:
+            response = f"Unable to add dataset, due to Exception {e}"
         
         return Response(response)       
 
 class ModelResponseView(APIView):
-
+    """
+        Get prediction from saved machine learning model
+    """
     def get(self, request):
+        """Prediction request
+
+        Args:
+            request (client request): client request info
+                - model_name : str
+                - dataset_id : int
+
+        Returns:
+            JSON: list of saved models
+        """
         try:
             model_name  = request.GET.get('model_name')
             dataset_id  = request.GET.get('dataset_id')
             dataset     = Dataset.objects.get(id = dataset_id)
             
+            if ModelFile.objects.filter(model_name = model_name, dataset = dataset).count() > 0:
+                return Response("Model already exist")
+            
+            modelFileRecord = ModelFile(
+                                model_name = model_name,
+                                dataset = dataset,
+                                
+                            )
+            
+            modelFileRecord.model_obj.save(
+                f"{model_name} trained on {dataset.name} dataset - {dataset_id}.pkl",
+                ContentFile(
+                    get_trained_model(
+                        model_name,
+                        dataset_id,
+                        request.data.get('knn_val', 0),
+                    )
+                )
+            )
+
+            modelFileRecord.save()
+
             modelFileRecord = ModelFile.objects.get(model_name = model_name, dataset = dataset)
 
             res = {

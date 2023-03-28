@@ -11,6 +11,15 @@ models_list = [
 ]
 
 class Dataset(models.Model):
+    """
+        Dataset Model schema
+
+        columns : 
+            name : str
+            path : str
+            features : json
+            targets  : json
+    """
     name        = models.CharField(max_length = 30, unique = True, blank = False)
     path        = models.FileField(upload_to = "datasets")
     features    = models.JSONField(default = dict)
@@ -20,6 +29,13 @@ class Dataset(models.Model):
         return f"{self.name} dataset {self.id}"
 
 class ModelFile(models.Model):
+    """ 
+        ModelFile Schema
+
+        model_name : str
+        dataset_id : int
+        model_obj  : str path of saved model
+    """
     model_name  = models.CharField(
                     choices = models_list,
                     default = models_list[1][1],
