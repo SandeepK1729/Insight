@@ -36,7 +36,7 @@ def get_trained_model(model_name: str, dataset_id: int, knn_val: int):
     Returns:
         obj: returns the model trained object in some of file content
     """
-    
+
     features, target = get_dataset(dataset_id)
     
     model = get_model(model_name, knn_val)
@@ -55,17 +55,16 @@ def give_analysis_report(model_file, dataset_id):
         dict: gives report of dictionary
     """
     
-    features, target = get_dataset(dataset_id)
-    X_train, X_test, y_train, y_test = train_test_split(features, target, test_size = 0.2)
+    X, y = get_dataset(dataset_id)
     
     model = load(model_file)
     
-    y_pred = model.predict(X_test)        # making prediction
+    y_pred = model.predict(X)        # making prediction
     
     res = {
-        "accuracy"              : f"{int(accuracy_score(y_test, y_pred) * 100)}",
-        "Precision Score"       : f"{int(precision_score(y_test, y_pred, average = 'micro') * 100)}",
-        "Recall Score"          : f"{int(recall_score(y_test, y_pred, average = 'micro') * 100)}",
+        "accuracy"              : f"{int(accuracy_score(y, y_pred) * 100)}",
+        "Precision Score"       : f"{int(precision_score(y, y_pred, average = 'micro') * 100)}",
+        "Recall Score"          : f"{int(recall_score(y, y_pred, average = 'micro') * 100)}",
     }
     
     # plt.title(f"Classfication using {model_name} on {dataset_name}")
