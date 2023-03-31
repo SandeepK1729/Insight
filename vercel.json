@@ -1,0 +1,14 @@
+{
+    "builds": [
+        {
+            "src": "backend/Insight/wsgi.py",
+            "use": "@vercel/python"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/(.*)",
+            "dest": "backend/Insight/wsgi.py"
+        }
+    ]
+}
