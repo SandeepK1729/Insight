@@ -16,9 +16,9 @@
       { "src": "/(.*)", "dest": "frontend/build/\$1" }
     ],
     "env": {
-      "DJANGO_SETTINGS_MODULE": "backend.settings",
+      "DJANGO_SETTINGS_MODULE": "backend.Insight.settings",
       "STATIC_ROOT": "frontend/build/static"
     },
     "public": false
-  }
+}
   
