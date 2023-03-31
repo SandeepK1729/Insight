@@ -1,5 +1,7 @@
 from pathlib import Path
 
+import dj_database_url
+
 import environ
 env = environ.Env()
 environ.Env.read_env()
@@ -94,24 +96,33 @@ WSGI_APPLICATION = 'Insight.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-LOCAL_DATABASE = {
-    'default': {
+LIST_OF_DATABASES = {
+    # local database
+    'local': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-
-GLOBAL_DATABASE = {
-    'default': {
+    },
+    'mongo': {
         'ENGINE': 'djongo',
         'NAME': 'Insight',
         'ENFORCE_SCHEMA': False,
         'CLIENT': {
             'host': env('MONGO_CONNECTION_STRING')
         }  
+    },
+    'postgres': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': env("DATABASE_NAME"),
+        'USER': env("DATABASE_USER"),
+        'PASSWORD': env("DATABASE_PASSWORD"),
+        'HOST': env("DATABASE_HOST"),
+        'PORT': env("DATABASE_PORT"),
     }
 }
-DATABASES = GLOBAL_DATABASE
+
+DATABASES = {
+    'default': LIST_OF_DATABASES['postgres']
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

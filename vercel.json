@@ -1,14 +1,24 @@
 {
+    "version": 2,
     "builds": [
-        {
-            "src": "backend/Insight/wsgi.py",
-            "use": "@vercel/python"
-        }
+      {
+        "src": "frontend/package.json",
+        "use": "@vercel/static-build",
+        "config": { "distDir": "frontend/build" }
+      },
+      {
+        "src": "backend/Insight/wsgi.py",
+        "use": "@vercel/python"
+    }
     ],
     "routes": [
-        {
-            "src": "/(.*)",
-            "dest": "backend/Insight/wsgi.py"
-        }
-    ]
-}
+      { "src": "/api/(.*)", "dest": "backend/Insight/wsgi.py" },
+      { "src": "/(.*)", "dest": "frontend/build/\$1" }
+    ],
+    "env": {
+      "DJANGO_SETTINGS_MODULE": "backend.settings",
+      "STATIC_ROOT": "frontend/build/static"
+    },
+    "public": false
+  }
+  
