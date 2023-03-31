@@ -17,7 +17,7 @@ SECRET_KEY = env('SECRET_KEY')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
 
 # Application definition
 
@@ -94,13 +94,24 @@ WSGI_APPLICATION = 'Insight.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
+LOCAL_DATABASE = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
     }
 }
 
+GLOBAL_DATABASE = {
+    'default': {
+        'ENGINE': 'djongo',
+        'NAME': 'Insight',
+        'ENFORCE_SCHEMA': False,
+        'CLIENT': {
+            'host': env('MONGO_CONNECTION_STRING')
+        }  
+    }
+}
+DATABASES = GLOBAL_DATABASE
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
@@ -153,3 +164,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # )
 
 CORS_ALLOW_ALL_ORIGINS = True
+
+WSGI_APPLICATION = 'Insight.wsgi.app'

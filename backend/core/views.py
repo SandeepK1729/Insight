@@ -23,6 +23,7 @@ def apiOverview(request):
         'dataset detail'    : f"http://{host}/api/datasets/pk:int",
         
         'models'            : f"http://{host}/api/models",
+        'model detail'      : f"http://{host}/api/models/pk:int",
         'predict'           : f"http://{host}/api/predict",
         
     })

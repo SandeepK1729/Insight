@@ -6,9 +6,12 @@ from django.conf.urls.static import static
 
 from core import urls as coreUrls
 
+from django.shortcuts import redirect
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include(coreUrls)),
+    path('', lambda request: redirect('/api'))
 ]
 
 if settings.DEBUG:
