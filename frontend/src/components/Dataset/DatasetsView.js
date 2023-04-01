@@ -1,8 +1,16 @@
 import React from "react";
+import Table from 'react-bootstrap/Table';
+import DatasetForm from "./DatasetForm";
+
+import Popup from 'reactjs-popup';
+import 'reactjs-popup/dist/index.css';
+
+import Button from 'react-bootstrap/Button';
+
 import './DatasetsView.css'
+import axios from "axios";
 
 class Datasets extends React.Component {
-
 	// Constructor
 	constructor(props) {
 		super(props);
@@ -16,11 +24,11 @@ class Datasets extends React.Component {
 	// ComponentDidMount is used to
 	// execute the code
 	componentDidMount() {
-		fetch("http://127.0.0.1:8000/api/datasets/")
-			.then((res) => res.json())
+		axios.get("/api/datasets/")
 			.then((json) => {
+				console.log(json.data);
 				this.setState({
-					items: json,
+					items: json.data,
 					DataisLoaded: true
 				});
 			})
@@ -35,9 +43,17 @@ class Datasets extends React.Component {
 			);
 
 		return (
-		<div className = "App">
-			<h1> Fetch data from an api in react </h1> 
-				<table>	
+			<div className = "App">
+				<h1> List of Datasets </h1> 
+				<Popup 
+					trigger={<Button variant="primary">Upload Dataset</Button>} 
+					position="bottom left"
+					closeOnDocumentClick
+				>
+					<DatasetForm/>
+				</Popup>
+
+				<Table hover striped bordered responsive>	
 					<tr>
 						<th>ID</th>
 						<th>Name</th>
@@ -48,14 +64,14 @@ class Datasets extends React.Component {
 							<tr key = { item.id } >
 								<td>{ item.id }</td>
 								<td>{ item.name }</td>
-								<td>{ item.path }</td>
+								<td><a download={true} href={ item.path }><i class="fas fa-file-download"></i></a></td>
 							</tr>	
 						))
 					}
-				</table>
-		</div>
-	);
-}
+				</Table>
+			</div>
+		);
+	}
 }
 
 export default Datasets;

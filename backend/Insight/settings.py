@@ -56,6 +56,9 @@ REST_FRAMEWORK = {
 
 ROOT_URLCONF = 'Insight.urls'
 
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/4.1/howto/static-files/
+
 STATIC_URL  = '/static/'
 STATIC_ROOT = Path.joinpath(BASE_DIR, 'static_cdn')
 
@@ -69,6 +72,7 @@ ADMIN_MEDIA_URL = STATIC_URL + 'admin/' #admin is now served by staticfiles
 
 STATICFILES_DIRS = [
     Path.joinpath(BASE_DIR, 'static'),
+    Path.joinpath(BASE_DIR, '..', 'frontend', 'build', 'static'),
 ]
 
 STATICFILES_STORAGE = "django.contrib.staticfiles.storage.StaticFilesStorage"  # new
@@ -124,6 +128,23 @@ DATABASES = {
     'default': LIST_OF_DATABASES['postgres']
 }
 
+
+
+MEM_BASED_CACHE = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.memcached.PyMemcacheCache',
+        'LOCATION': '127.0.0.1:11211',
+    }
+}
+FILE_BASED_CACHE = {
+    'default': {
+        'BACKEND': 'django.core.cache.backends.filebased.FileBasedCache',
+        'LOCATION': BASE_DIR / 'caches',
+    }
+}
+
+CACHES = FILE_BASED_CACHE
+
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
 
@@ -154,11 +175,6 @@ USE_I18N = True
 
 USE_TZ = True
 
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
-
-STATIC_URL = 'static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field

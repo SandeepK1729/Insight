@@ -1,8 +1,6 @@
 from django.shortcuts   import render
 from django.http        import JsonResponse
 
-from django.core.files.base     import File, ContentFile
-
 from rest_framework.decorators  import api_view
 from rest_framework.response    import Response
 from rest_framework.views       import APIView
@@ -12,6 +10,12 @@ from .serializers   import DatasetSerializer, ModelFileSerializer
 from .models        import Dataset, ModelFile
 from .helper        import get_trained_model, give_analysis_report
 
+from django.core.files.base         import File, ContentFile
+from django.utils.decorators        import method_decorator
+from django.views.decorators.cache  import cache_page
+from django.core.cache              import cache
+
+@cache_page(60 * 60 * 30)
 @api_view(['GET'])
 def apiOverview(request):
     """
@@ -28,12 +32,61 @@ def apiOverview(request):
         
     })
 
-class DatasetViewSet(viewsets.ModelViewSet):
+class DatasetView(APIView):
     """ 
         List of all Datasets available, and upload a dataset
     """
-    queryset = Dataset.objects.all()
-    serializer_class = DatasetSerializer
+    @method_decorator(cache_page(60))
+    def get(self, request):
+        """Get all datasets
+
+        Args:
+            request (client request): contains client data
+
+        Returns:
+            JSON: list of all datasets
+        """
+        try:
+            res = DatasetSerializer(
+                    Dataset.objects.all(),
+                    many = True
+                ).data
+        except Exception as e:
+            res = f"Unable to load datasets, beacuase {e}"
+        
+        return Response(res)
+
+    def post(self, request):
+        """Upload a dataset
+
+        Args:
+            request (client request): contains client data
+
+        Returns:
+            JSON: message about transaction
+        """
+        try:
+            name        = request.data.get('name')
+            features    = request.data.get('features')
+            targets     = request.data.get('targets')
+            path        = request.data.get('path')
+
+            if Dataset.objects.filter(name = name).count() > 0:
+                return Response("Unable to upload dataset, because name already exist")
+            
+            dataset     = Dataset(
+                            name        = name,
+                            features    = features,
+                            targets     = targets,
+                            path        = path
+                        )
+            dataset.save()
+            res = "Dataset uploaded successfully"
+
+        except Exception as e:
+            res = f"Unable to upload dataset, because {e}"
+        
+        return Response(res)
 
 class DatasetDetailView(APIView):
     """
@@ -134,10 +187,29 @@ class DatasetDetailView(APIView):
     
         return Response(res)
 
+class SupportedModelsView(APIView):
+    """
+        List of all supported models
+    """
+    def get(self, request):
+        """invokes when get request
+
+        Args:
+            request (user request): contains all data of client
+
+        Returns:
+            Response: list of all models
+        """
+        from .models import models_list
+
+        res = [{"id": idx, "name": val[0]} for idx, val in enumerate(models_list)]
+        return Response(res)
+
 class ModelFileView(APIView):
     """
         List of all Models, or create a model and save into file
     """
+    @method_decorator(cache_page(60))
     def get(self, request):
         """invokes when get request
 
