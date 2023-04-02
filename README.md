@@ -5,8 +5,8 @@ My First machine learning project. By using this app anyone can get benifit of m
 
 ## Sub repos && Deployments
 
-- [Frontend](https://github.com/SandeepK1729/Insight-frontend) - [https://insight-one.vercel.app](https://insight-one.vercel.app/)
-- [Backend](https://github.com/SandeepK1729/Insight-backend)   - [https://insight-rnky.onrender.com](https://insight-rnky.onrender.com/api)
+- [Frontend](https://github.com/SandeepK1729/Insight-frontend){:target="_blank"} - [https://insight-one.vercel.app](https://insight-one.vercel.app/){:target="_blank"}
+- [Backend](https://github.com/SandeepK1729/Insight-backend){:target="_blank"}   - [https://insight-rnky.onrender.com](https://insight-rnky.onrender.com/api){:target="_blank"}
 
 
 
