@@ -51,7 +51,7 @@ class ModelForm extends React.Component {
             ...this.state,
             showMessage: true,
             messageType: "secondary",
-            message: "uploading, please wait"
+            message: "training model, please wait"
         })
         event.preventDefault();
 
@@ -68,19 +68,18 @@ class ModelForm extends React.Component {
                     model_name: "",
                     dataset_id: "",
                     messageType: "primary",
+                    showMessage: true,
+                    message: res.data,
                 })
             }
             else {
                 this.setState({
                     ...this.state,
                     messageType: "danger",
+                    showMessage: true,
+                    message: res.data,
                 })
             }
-            this.setState({
-                ...this.state,
-                showMessage: true,
-                message: res.data,
-            })
         })
     }
 

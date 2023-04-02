@@ -20,6 +20,10 @@ class Homepage extends Component {
                 apiStatus: true
             });
         });
+
+        axios.get(`${process.env.REACT_APP_API_URL}/api/models`).then(res => console.log("models list cache ready"));
+        axios.get(`${process.env.REACT_APP_API_URL}/api/datasets`).then(res => console.log("datasets list cache ready"));
+        
     }
 
     render() {

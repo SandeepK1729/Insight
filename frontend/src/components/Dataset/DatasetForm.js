@@ -44,12 +44,19 @@ class DatasetForm extends React.Component {
         this.state.features.split(",").forEach((value) => {
             featuresList[value.trim()] = "";
         })
+        
 
         let targetsList = {}
         this.state.targets.split(",").forEach((value) => {
             targetsList[value.trim()] = "";
         })
         
+        this.setState({
+            ...this.state,
+            features: JSON.stringify(featuresList),
+            targets: JSON.stringify(targetsList),
+        });
+
         let data = new FormData();
         for(let name in this.state) {
             data.append(name, this.state[name])

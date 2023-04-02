@@ -34,8 +34,6 @@ class Datasets extends React.Component {
 			})
 	}
 	render() {
-		console.log(process.env.REACT_APP_API_URL)
-
 		if (!this.state.DataisLoaded) 
 			return (
 				<div>
