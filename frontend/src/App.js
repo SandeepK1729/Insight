@@ -1,5 +1,6 @@
 import './App.css';
 
+import Homepage from "./components/Pages/Homepage";
 import NavBar from './components/Nav/NavBar';
 
 import Datasets from './components/Dataset/DatasetsView';
@@ -16,7 +17,7 @@ function App() {
 			<NavBar/>
 			<BrowserRouter>
 				<Routes>
-					<Route path="/" element={<h1>Hello</h1>} />
+					<Route path="/" element={<Homepage/>} />
 
 					<Route path="/datasets" element={<Datasets />} />
 					<Route path="/datasets/upload" element={<DatasetForm/>}/>

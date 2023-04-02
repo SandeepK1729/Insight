@@ -24,7 +24,7 @@ class Models extends React.Component {
 	// ComponentDidMount is used to
 	// execute the code
 	componentDidMount() {
-		axios.get("/api/models/")
+		axios.get(`${process.env.REACT_APP_API_URL}/api/models/`)
 			.then((json) => {
 				this.setState({
 					items: json.data,
@@ -52,22 +52,26 @@ class Models extends React.Component {
 				<ModelForm/>
 			</Popup>
 			<Table hover striped bordered responsive>	
-				<tr>
-					<th>ID</th>
-					<th>Model Name</th>
-					<th>Model Path</th>
-					<th>Dataset ID</th>
-				</tr>					
+				<thead>
+					<tr>
+						<th>ID</th>
+						<th>Model Name</th>
+						<th>Model Path</th>
+						<th>Dataset ID</th>
+					</tr>					
+				</thead>
+				<tbody>
 				{
 					items.map((item) => (
 						<tr key = { item.id } >
 							<td>{ item.id }</td>
 							<td>{ item.model_name }</td>
-							<td><a href={ item.model_obj }><i class="fas fa-file-download"></i></a></td>
+							<td><a href={ item.model_obj }><i className="fas fa-file-download"></i></a></td>
 							<td>{ item.dataset }</td>
 						</tr>	
 					))
 				}
+				</tbody>
 			</Table>
 		</div>
 	);

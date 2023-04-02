@@ -24,9 +24,9 @@ class Datasets extends React.Component {
 	// ComponentDidMount is used to
 	// execute the code
 	componentDidMount() {
-		axios.get("/api/datasets/")
+		axios.get(`${process.env.REACT_APP_API_URL}/api/datasets/`)
 			.then((json) => {
-				console.log(json.data);
+				
 				this.setState({
 					items: json.data,
 					DataisLoaded: true
@@ -34,14 +34,15 @@ class Datasets extends React.Component {
 			})
 	}
 	render() {
-		const { DataisLoaded, items } = this.state;
-		if (!DataisLoaded) 
+		console.log(process.env.REACT_APP_API_URL)
+
+		if (!this.state.DataisLoaded) 
 			return (
 				<div>
 					<h1> Pleses wait some time.... </h1> 
 				</div>
 			);
-
+		else
 		return (
 			<div className = "App">
 				<h1> List of Datasets </h1> 
@@ -54,20 +55,24 @@ class Datasets extends React.Component {
 				</Popup>
 
 				<Table hover striped bordered responsive>	
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Path</th>
-					</tr>					
+					<thead>
+						<tr>
+							<th>ID</th>
+							<th>Name</th>
+							<th>Path</th>
+						</tr>	
+					</thead>
+					<tbody>
 					{
-						items.map((item) => (
+						this.state.items.map((item) => (
 							<tr key = { item.id } >
 								<td>{ item.id }</td>
 								<td>{ item.name }</td>
-								<td><a download={true} href={ item.path }><i class="fas fa-file-download"></i></a></td>
+								<td><a download={true} href={ process.env.REACT_APP_API_URL + item.path }><i className="fas fa-file-download"></i></a></td>
 							</tr>	
 						))
 					}
+					</tbody>				
 				</Table>
 			</div>
 		);

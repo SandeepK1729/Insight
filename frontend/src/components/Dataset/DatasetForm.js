@@ -8,7 +8,7 @@ class DatasetForm extends React.Component {
             name: "",
             features: "",
             targets: "",
-            path: "",
+            path: null,
             message: "",
             
         }
@@ -18,9 +18,12 @@ class DatasetForm extends React.Component {
     }
 
     handleChange(event) {
-        const value = event.target.value;
-        const name = event.target.name;
+        let value = event.target.value;
+        let name = event.target.name;
         
+        if(name === "path") {
+            value = event.target.files[0];
+        }
         this.setState({
             ...this.state,
             [name]: value,
@@ -47,15 +50,16 @@ class DatasetForm extends React.Component {
             targetsList[value.trim()] = "";
         })
         
-        let data = {
-            name: this.state.name,
-            features: featuresList,
-            targets : targetsList,
-            path: this.state.path
-        };
-        
+        let data = new FormData();
+        for(let name in this.state) {
+            data.append(name, this.state[name])
+        }
 
-        axios.post(`/api/datasets/`, data)
+        axios.post(`${process.env.REACT_APP_API_URL}/api/datasets/`, data, {
+            headers: {
+            "Content-Type":"multipart/form-data"
+            } 
+        })
         .then(res => {
             if(res.status === 200) {
                 this.setState({
@@ -65,19 +69,18 @@ class DatasetForm extends React.Component {
                     targets: "",
                     path: "",
                     messageType: "primary",
-                })
+                    showMessage: true,
+                    message: res.data,
+                });
             }
             else {
                 this.setState({
                     ...this.state,
                     messageType: "danger",
+                    showMessage: true,
+                    message: res.data,
                 })
             }
-            this.setState({
-                ...this.state,
-                showMessage: true,
-                message: res.data,
-            })
         })
     }
 
@@ -85,28 +88,28 @@ class DatasetForm extends React.Component {
         return (
             <div className="row justify-content-center flex flex-col">
                 <h1>Dataset Upload Form</h1>
-                <form onSubmit={this.handleSubmit}>
-                    <div classname="form-group">
-                        <label for="name">Dataset Name</label>
+                <form encType="multipart/form-data" onSubmit={this.handleSubmit}>
+                    <div className="form-group">
+                        <label forname="name">Dataset Name</label>
                         <input onChange={this.handleChange} type="text" className="form-control" name="name" id="name" aria-describedby="nameOfDataset" placeholder={this.state.name}/>
                         <small id="nameOfDataset" className="form-text text-muted">Enter name of the dataset</small>
                     </div>
 
                     <div className="form-group">
-                        <label for="features">Features</label>
+                        <label forname="features">Features</label>
                         <input type="text" onChange={this.handleChange}
                             className="form-control" name="features" id="features" aria-describedby="featuresOfDataset" placeholder={this.state.features}/>
                         <small id="featuresOfDataset" className="form-text text-muted">Enter comma separated features </small>
                     </div>
 
                     <div className="form-group">
-                        <label for="targets">Targets</label>
+                        <label forname="targets">Targets</label>
                         <input onChange={this.handleChange} type="text" className="form-control" name="targets" id="targets" aria-describedby="targetsOfDataset" placeholder={this.state.targets}/>
                         <small id="targetsOfDataset" className="form-text text-muted">Enter comma separated targets</small>
                     </div>
 
                     <div className="form-group">
-                        <label for="path">Dataset File</label>
+                        <label forname="path">Dataset File</label>
                         <input onChange={this.handleChange} type="file"
                             className="form-control" name="path" id="path" aria-describedby="helpId" placeholder="path"/>
                         <small id="helpId" className="form-text text-muted">Upload dataset file</small>

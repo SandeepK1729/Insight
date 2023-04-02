@@ -5,11 +5,12 @@
 /.pnp
 .pnp.js
 
+.env
 # testing
 /coverage
 
 # production
-# /build
+/build
 
 # misc
 .DS_Store
