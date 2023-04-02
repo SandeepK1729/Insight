@@ -14,5 +14,5 @@ urlpatterns = [
     path('models/', ModelFileView.as_view(), name = "models"),
     path('models/<int:pk>', ModelFileDetailView.as_view(), name = "model detail"),
 
-    path('analysis/', ModelResponseView.as_view(), name = "analysis"),
+    path('analyze/', ModelResponseView.as_view(), name = "analyze"),
 ]

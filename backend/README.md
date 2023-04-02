@@ -1,1 +1,1 @@
-// give documentation for api's in core/views.py
+give me documentation for

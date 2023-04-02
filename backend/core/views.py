@@ -28,7 +28,9 @@ def apiOverview(request):
         
         'models'            : f"http://{host}/api/models",
         'model detail'      : f"http://{host}/api/models/pk:int",
-        'predict'           : f"http://{host}/api/predict",
+        'supported models'  : f"http://{host}/api/supported-models/",
+
+        'analysis'           : f"http://{host}/api/analyze",
         
     })
 
@@ -436,7 +438,7 @@ class ModelResponseView(APIView):
                 "model_name"    : modelFileRecord.model_name,
                 "dataset"       : modelFileRecord.dataset.name,
                 "model_path"    : modelFileRecord.model_obj.url,
-                **give_analysis_report(
+                **give_analyze_report(
                     modelFileRecord.model_obj.open('rb'), 
                     dataset_id
                 )
