@@ -10,7 +10,8 @@
   ],
   "env": {
     "DJANGO_SETTINGS_MODULE": "backend.Insight.settings",
-    "STATIC_ROOT": "frontend/build/static"
+    "STATIC_ROOT": "frontend/build/static",
+    "STATIC_BUILD_OUT_DIR": "frontend/build"
   },
   "public": true
 }
