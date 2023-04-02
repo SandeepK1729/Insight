@@ -1,7 +1,7 @@
 {
   "version": 2,
   "builds": [
-    { "src": "frontend/package.json", "use": "@vercel/static-build", "config": { "distDir": "frontend/build" } },
+    { "src": "frontend/package.json", "use": "@vercel/static-build", "config": { "out": "frontend/build" } },
     { "src": "backend/Insight/wsgi.py", "use": "@vercel/python", "config": { "maxLambdaSize": "50mb" } }
   ],
   "routes": [
