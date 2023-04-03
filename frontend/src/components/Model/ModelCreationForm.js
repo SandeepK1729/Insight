@@ -46,8 +46,8 @@ class ModelForm extends React.Component {
         });
     }
 
-    handleSubmit(event) {
-        this.setState({
+    async handleSubmit(event) {
+        await this.setState({
             ...this.state,
             showMessage: true,
             messageType: "secondary",

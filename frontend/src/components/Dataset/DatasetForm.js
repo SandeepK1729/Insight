@@ -31,8 +31,8 @@ class DatasetForm extends React.Component {
         });
     }
 
-    handleSubmit(event) {
-        this.setState({
+    async handleSubmit(event) {
+        await this.setState({
             ...this.state,
             showMessage: true,
             message: "Uploading, please wait",
@@ -51,7 +51,7 @@ class DatasetForm extends React.Component {
             targetsList[value.trim()] = "";
         })
         
-        this.setState({
+        await this.setState({
             ...this.state,
             features: JSON.stringify(featuresList),
             targets: JSON.stringify(targetsList),
