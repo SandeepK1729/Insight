@@ -47,7 +47,7 @@ class Models extends React.Component {
 			<Popup 
 				trigger={<Button variant="primary">Create Model</Button>} 
 				position="bottom left"
-				closeOnDocumentClick
+				closeOnDocumentClick={window.location.reload()}
 			>
 				<ModelForm/>
 			</Popup>

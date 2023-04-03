@@ -15,6 +15,7 @@ class ModelForm extends React.Component {
         this.handleChange = this.handleChange.bind(this);
         this.handleSubmit = this.handleSubmit.bind(this);
     }
+    
     componentDidMount() {
 		fetch(`${process.env.REACT_APP_API_URL}/api/supported-models/`)
         .then((res) => res.json())
@@ -57,7 +58,8 @@ class ModelForm extends React.Component {
 
         let data = {
             model_name : this.state.model_name,
-            dataset_id : this.state.dataset_id
+            dataset_id : this.state.dataset_id,
+            knn_val    : this.state.knn_val,
         };
 
         axios.post(`${process.env.REACT_APP_API_URL}/api/models/`, data)
