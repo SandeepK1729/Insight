@@ -41,7 +41,6 @@ class DatasetView(APIView):
     """ 
         List of all Datasets available, and upload a dataset
     """
-    @method_decorator(cache_page(60))
     def get(self, request):
         """Get all datasets
 
@@ -52,10 +51,12 @@ class DatasetView(APIView):
             JSON: list of all datasets
         """
         try:
-            res = DatasetSerializer(
-                    Dataset.objects.all(),
-                    many = True
-                ).data
+            if cache.has_key("datasets"):
+                res = cache.get("datasets")
+            else:
+                res = DatasetSerializer(Dataset.objects.all(), many = True).data
+                cache.set("datasets", res)
+                
         except Exception as e:
             res = f"Unable to load datasets, beacuase {e}"
         
@@ -70,26 +71,27 @@ class DatasetView(APIView):
         Returns:
             JSON: message about transaction
         """
-        try:
-            name        = request.data.get('name')
-            features    = loads(request.data.get('features'))
-            targets     = loads(request.data.get('targets'))
-            path        = request.data.get('path')
+        # try:
+        name        = request.data.get('name')
+        features    = loads(request.data.get('features'))
+        targets     = loads(request.data.get('targets'))
+        path        = request.data.get('path')
 
-            if Dataset.objects.filter(name = name).count() > 0:
-                return Response("Unable to upload dataset, because name already exist")
-            
-            dataset     = Dataset(
-                            name        = name,
-                            features    = features,
-                            targets     = targets,
-                            path        = path
-                        )
-            dataset.save()
-            res = "Dataset uploaded successfully"
+        if Dataset.objects.filter(name = name).count() > 0:
+            return Response("Unable to upload dataset, because name already exist")
+        
+        dataset     = Dataset(
+                        name        = name,
+                        features    = features,
+                        targets     = targets,
+                        path        = path
+                    )
 
-        except Exception as e:
-            res = f"Unable to upload dataset, because {e}"
+        dataset.save()
+        res = "Dataset uploaded successfully"
+
+        # except Exception as e:
+        #     res = f"Unable to upload dataset, because {e}"
         
         return Response(res)
 
@@ -214,7 +216,6 @@ class ModelFileView(APIView):
     """
         List of all Models, or create a model and save into file
     """
-    @method_decorator(cache_page(60))
     def get(self, request):
         """invokes when get request
 
@@ -224,12 +225,16 @@ class ModelFileView(APIView):
         Returns:
             Response: list of all models
         """
-        return Response(
-            ModelFileSerializer(
-                ModelFile.objects.all(),
-                many = True
-            ).data
-        )
+        try:
+            if cache.has_key("model_files"):
+                res = cache.get("model_files")
+            else:
+                res = ModelFileSerializer(ModelFile.objects.all(), many = True).data
+                cache.set("model_files", res, 60 * 60 * 2)
+        except Exception as e:
+            res = f"Unable to load models, beacuase {e}"
+
+        return Response(res)
     
     def post(self, request):
         """invokes post request called used to create model
@@ -263,7 +268,7 @@ class ModelFileView(APIView):
                     get_trained_model(
                         model_name,
                         dataset_id,
-                        request.data.get('knn_val', 0),
+                        int(request.data.get('knn_val', '0')),
                     )
                 )
             )

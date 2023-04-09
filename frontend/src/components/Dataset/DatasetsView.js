@@ -7,7 +7,7 @@ import 'reactjs-popup/dist/index.css';
 
 import Button from 'react-bootstrap/Button';
 
-import './DatasetsView.css'
+import './DatasetsView.css';
 import axios from "axios";
 
 class Datasets extends React.Component {
@@ -17,21 +17,39 @@ class Datasets extends React.Component {
 
 		this.state = {
 			items: [],
-			DataisLoaded: false
+			DataisLoaded: false,
+			isPopupOpen: false
 		};
+
+		this.handleClose = this.handleClose.bind(this);
+		this.handleShow  = this.handleShow.bind(this);
+		this.loadAllModels = this.loadAllModels.bind(this);
 	}
 
+	
+	handleShow (e) {
+		this.setState({...this.state, isPopupOpen: true});
+	}
+	handleClose(e) {
+		this.loadAllModels();
+		this.setState({...this.state, isPopupOpen: false});
+	}
+
+	loadAllModels() {
+		axios.get(`${process.env.REACT_APP_API_URL}/api/datasets/`)
+		.then((json) => {
+			
+			this.setState({
+				items: json.data,
+				DataisLoaded: true
+			});
+		});
+		console.log("datasets loaded!!")
+	}
 	// ComponentDidMount is used to
 	// execute the code
 	componentDidMount() {
-		axios.get(`${process.env.REACT_APP_API_URL}/api/datasets/`)
-			.then((json) => {
-				
-				this.setState({
-					items: json.data,
-					DataisLoaded: true
-				});
-			})
+		this.loadAllModels();
 	}
 	render() {
 		if (!this.state.DataisLoaded) 
@@ -44,12 +62,15 @@ class Datasets extends React.Component {
 		return (
 			<div className = "App">
 				<h1> List of Datasets </h1> 
+				<Button variant="primary" onClick={this.handleShow}>Upload Dataset</Button>
 				<Popup 
-					trigger={<Button variant="primary">Upload Dataset</Button>} 
+					open={this.state.isPopupOpen}
+					onClose={this.handleClose}
 					position="bottom left"
-					closeOnDocumentClick
+					closeOnDocumentClick={true}
 				>
 					<DatasetForm/>
+					<Button onClick={this.handleClose}><i className="fa fa-window-close" aria-hidden="true"></i></Button>
 				</Popup>
 
 				<Table hover striped bordered responsive>	

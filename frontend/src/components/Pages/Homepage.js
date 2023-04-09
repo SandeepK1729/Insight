@@ -17,7 +17,7 @@ class Homepage extends Component {
         axios.get(`${process.env.REACT_APP_API_URL}/api/`)
         .then(res => {
             this.setState({
-                apiStatus: true
+                apiStatus: (res.status === 200)
             });
         });
 

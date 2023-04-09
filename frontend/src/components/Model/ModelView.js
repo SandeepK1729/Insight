@@ -17,20 +17,36 @@ class Models extends React.Component {
 
 		this.state = {
 			items: [],
-			DataisLoaded: false
+			DataisLoaded: false,
+			isPopupOpen: false
 		};
+
+		this.handleClose = this.handleClose.bind(this);
+		this.handleShow  = this.handleShow.bind(this);
+		this.loadAllModels = this.loadAllModels.bind(this);
 	}
 
+	handleShow (e) {
+		this.setState({...this.state, isPopupOpen: true});
+	}
+	handleClose(e) {
+		this.loadAllModels();
+		this.setState({...this.state, isPopupOpen: false});
+	}
+
+	loadAllModels() {
+		axios.get(`${process.env.REACT_APP_API_URL}/api/models/`)
+		.then((json) => {
+			this.setState({
+				items: json.data,
+				DataisLoaded: true
+			});
+		});
+	}
 	// ComponentDidMount is used to
 	// execute the code
 	componentDidMount() {
-		axios.get(`${process.env.REACT_APP_API_URL}/api/models/`)
-			.then((json) => {
-				this.setState({
-					items: json.data,
-					DataisLoaded: true
-				});
-			})
+		this.loadAllModels();
 	}
 	render() {
 		const { DataisLoaded, items } = this.state;
@@ -44,13 +60,18 @@ class Models extends React.Component {
 		return (
 		<div className = "App">
 			<h1> Fetch data from an api in react </h1> 
+			<Button variant="primary" onClick={this.handleShow}>Create Model</Button>
 			<Popup 
-				trigger={<Button variant="primary">Create Model</Button>} 
+				open={this.state.isPopupOpen}
+				onClose={this.handleClose}
 				position="bottom left"
-				closeOnDocumentClick={window.location.reload()}
+				// modal nested
+				closeOnDocumentClick={true}
 			>
 				<ModelForm/>
+				<Button onClick={this.handleClose}><i className="fa fa-window-close" aria-hidden="true"></i></Button>
 			</Popup>
+
 			<Table hover striped bordered responsive>	
 				<thead>
 					<tr>
@@ -66,7 +87,7 @@ class Models extends React.Component {
 						<tr key = { item.id } >
 							<td>{ item.id }</td>
 							<td>{ item.model_name }</td>
-							<td><a href={ item.model_obj }><i className="fas fa-file-download"></i></a></td>
+							<td><a href={ process.env.REACT_APP_API_URL + item.model_obj }><i className="fas fa-file-download"></i></a></td>
 							<td>{ item.dataset }</td>
 						</tr>	
 					))

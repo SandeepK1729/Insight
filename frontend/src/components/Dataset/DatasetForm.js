@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 
+import {Button} from "react-bootstrap";
+
 class DatasetForm extends React.Component {
     constructor(props) {
         super(props);
@@ -32,19 +34,29 @@ class DatasetForm extends React.Component {
     }
 
     async handleSubmit(event) {
+        var msg = "Uploading, please wait";
+        
+        if(this.state.name === "")              msg = "Dataset name can't be empty";   
+        else if(this.state.targets === "")      msg = "Target can't be empty";       
+        else if(this.state.path === null)       msg = "File path can't be empty";
+        
+        let msgType = "secondary";
+        if((this.state.name === "") || (this.state.targets === "") || (this.state.path === null))   msgType = "danger";
+
         await this.setState({
             ...this.state,
             showMessage: true,
-            message: "Uploading, please wait",
-            messageType: "secondary"
+            message: msg,
+            messageType: msgType
         })
+        if(msgType === "danger")    return;
+        
         event.preventDefault();
         
         let featuresList = {}
         this.state.features.split(",").forEach((value) => {
             featuresList[value.trim()] = "";
         })
-        
 
         let targetsList = {}
         this.state.targets.split(",").forEach((value) => {
@@ -124,7 +136,7 @@ class DatasetForm extends React.Component {
 
                     {this.state.showMessage && (<p className={"text-" + this.state.messageType}>{this.state.message}</p>)}
                     
-                    <input type="submit" name="submit" value="Upload" onSubmit={this.handleSubmit}/>
+                    <Button variant={"primary"} type="submit"><i className="fas fa-upload fa-sm fa-fw"></i></Button>
                 </form>
             </div>
         );

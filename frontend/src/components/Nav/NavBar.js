@@ -4,7 +4,8 @@ import Container from 'react-bootstrap/Container';
 import Nav from 'react-bootstrap/Nav';
 import Navbar from 'react-bootstrap/Navbar';
 // import NavDropdown from 'react-bootstrap/NavDropdown';
-import logo from '../../assets/images/logo.png';
+import logo from '../../assets/images/logo.jpg';
+import logoLong from '../../assets/images/logo long.png';
 import './NavBar.css';
 
 function NavBar() {
@@ -12,13 +13,18 @@ function NavBar() {
     <Navbar bg="light" expand="lg" sticky='top'>
       <Container fluid>
         <Navbar.Brand href="/">
-            <img 
+            {/* <img 
               src={logo}
               width={"13.92px"}
               className={"img-fluid ${3|rounded-top,rounded-right,rounded-bottom,rounded-left,rounded-circle,|}"}
               alt=""
             /> 
-              Insight
+              Insight */}
+            <img
+              src={logoLong}
+              height={"18px"}
+              // className={"img-fluid"}
+            />
           </Navbar.Brand>
         <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">

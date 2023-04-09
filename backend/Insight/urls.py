@@ -14,14 +14,18 @@ urlpatterns = [
     # path('', lambda request: redirect('/api'))
 ]
 
-if settings.DEBUG:
-    # urlpatterns += staticfiles_urlpatterns()
-    urlpatterns += static(
-                    settings.MEDIA_URL,
-                    document_root = settings.MEDIA_ROOT
-                )
+urlpatterns += static(
+                settings.MEDIA_URL,
+                document_root = settings.MEDIA_ROOT
+            )
 
-    urlpatterns += static(
-                    settings.STATIC_URL,
-                    document_root = settings.STATIC_ROOT
-                )
+urlpatterns += static(
+                settings.STATIC_URL,
+                document_root = settings.STATIC_ROOT
+            )
+        
+
+# from django.contrib import admin
+
+# admin.site.index_template = 'admin/my_custom_index.html'
+# admin.autodiscover()

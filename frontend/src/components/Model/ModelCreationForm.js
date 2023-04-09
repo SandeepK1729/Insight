@@ -1,6 +1,8 @@
 import React from "react";
 import axios from "axios";
 
+import { Button } from "react-bootstrap";
+
 class ModelForm extends React.Component {
     constructor(props) {
         super(props);
@@ -121,7 +123,8 @@ class ModelForm extends React.Component {
 
                     {this.state.showMessage && (<p className={"text-" + this.state.messageType}>{this.state.message}</p>)}
                     
-                    <input type="submit" name="submit" value="Upload" onSubmit={this.handleSubmit}/>
+                    {/* <input type="submit" name="submit" value="Upload" onSubmit={this.handleSubmit}/> */}
+                    <Button variant="primary" type="submit">Create</Button>
                 </form>
             </div>
         );
