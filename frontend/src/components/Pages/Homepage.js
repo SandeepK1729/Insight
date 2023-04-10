@@ -9,7 +9,8 @@ class Homepage extends Component {
         super(props);
 
         this.state = {
-            apiStatus: false
+            apiStatus: false,
+            isDataloaded: false
         }
     }
 
@@ -17,6 +18,7 @@ class Homepage extends Component {
         axios.get(`${process.env.REACT_APP_API_URL}/api/`)
         .then(res => {
             this.setState({
+                isDataloaded: true,
                 apiStatus: (res.status === 200)
             });
         });
@@ -27,20 +29,26 @@ class Homepage extends Component {
     }
 
     render() {
+        if(!this.state.isDataloaded) 
+            return (
+                <div>
+                    loading ....
+                </div>
+            )
         return (
             <>
-            <h1>Hello, World</h1>
-            <p>This application is supported by <Link to={process.env.REACT_APP_API_URL + `/api/`}>Insight API</Link></p>
+                <h1>Hello, World</h1>
+                <p>This application is supported by <Link to={process.env.REACT_APP_API_URL + `/api/`}>Insight API</Link></p>
 
-            { this.state.apiStatus && (
-                    <p className="text-secondary">API ready, you can continue your exploring</p>
-            )}
+                { this.state.apiStatus && (
+                        <p className="text-secondary">API ready, you can continue your exploring</p>
+                )}
 
-            { !this.state.apiStatus && (
-                    <p className="text-muted">Your API is getting ready, please wait for a while</p>
-            )}
+                { !this.state.apiStatus && (
+                        <p className="text-muted">Your API is getting ready, please wait for a while</p>
+                )}
 
-            
+                
             </>
         )
     }

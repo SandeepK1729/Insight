@@ -44,7 +44,7 @@ class Datasets extends React.Component {
 				DataisLoaded: true
 			});
 		});
-		console.log("datasets loaded!!")
+
 	}
 	// ComponentDidMount is used to
 	// execute the code

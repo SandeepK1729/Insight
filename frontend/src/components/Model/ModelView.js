@@ -9,6 +9,8 @@ import Popup from "reactjs-popup";
 import ModelForm from "./ModelCreationForm";
 import axios from "axios";
 
+import ModelDetailedAnalysis from "../Analyze/ModelDetail";
+
 class Models extends React.Component {
 
 	// Constructor
@@ -79,6 +81,7 @@ class Models extends React.Component {
 						<th>Model Name</th>
 						<th>Model Path</th>
 						<th>Dataset ID</th>
+						<th>Analysis Report</th>
 					</tr>					
 				</thead>
 				<tbody>
@@ -89,6 +92,16 @@ class Models extends React.Component {
 							<td>{ item.model_name }</td>
 							<td><a href={ process.env.REACT_APP_API_URL + item.model_obj }><i className="fas fa-file-download"></i></a></td>
 							<td>{ item.dataset }</td>
+							<td>
+								<Popup 
+									trigger={<Button variant="info">Report</Button>}
+									position="bottom left"
+									// modal nested
+									closeOnDocumentClick={true}
+								>
+									<ModelDetailedAnalysis model_name={item.model_name} dataset_id={item.dataset} />
+								</Popup>
+							</td>
 						</tr>	
 					))
 				}
