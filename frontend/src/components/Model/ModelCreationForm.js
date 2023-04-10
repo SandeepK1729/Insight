@@ -93,9 +93,9 @@ class ModelForm extends React.Component {
                 <h1>Model Creation Form</h1>
                 <form onSubmit={this.handleSubmit}>
                     <div className="form-group">
-                      <label for="model_name">Selct Model</label>
+                      <label forname="  ">Selct Model</label>
                       <select required onChange={this.handleChange} className="form-control" name="model_name" id="model_name">
-                        <option selected disabled>Select Model</option>
+                        <option value={"he"} disabled>Select Model</option>
                         {
                             this.state.models.map(model => (
                                 <option key={model.id} value={model.name}>{model.name}</option>
@@ -105,12 +105,12 @@ class ModelForm extends React.Component {
                     </div>
 
                     {this.state.model_name === "K-Nearest Neighbors Classifier" && (<div>
-                        <label for="customRange1" className="form-label">Select Neighbors for KNN : {this.state.knn_val}</label>
+                        <label forname="customRange1" className="form-label">Select Neighbors for KNN : {this.state.knn_val}</label>
                         <input onChange={this.handleChange} type="range" defaultValue={2} className="form-range" id="knn_val" min="1" max="10" name="knn_val"/>
                     </div>)}
 
                     <div className="form-group">
-                      <label for="dataset_id">Select Dataset</label>
+                      <label forname="dataset_id">Select Dataset</label>
                       <select required onChange={this.handleChange} className="form-control" name="dataset_id" id="dataset_id">
                         <option selected disabled>Select Dataset</option>
                         {

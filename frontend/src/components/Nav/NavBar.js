@@ -22,11 +22,11 @@ function NavBar() {
               Insight */}
             <img
               src={logoLong}
-              height={"18px"}
+              height={"20px"}
               // className={"img-fluid"}
             />
           </Navbar.Brand>
-        <Navbar.Toggle aria-controls="navbarScroll" />
+        {/* <Navbar.Toggle aria-controls="navbarScroll" />
         <Navbar.Collapse id="navbarScroll">
           <Nav
             className="me-auto my-2 my-lg-0"
@@ -35,7 +35,7 @@ function NavBar() {
           >
             <Nav.Link href="/datasets">Datasets</Nav.Link>
             <Nav.Link href="/models">Models</Nav.Link>
-            {/* <NavDropdown title="Link" id="navbarScrollingDropdown">
+            <NavDropdown title="Link" id="navbarScrollingDropdown">
               <NavDropdown.Item href="#action3">Action</NavDropdown.Item>
               <NavDropdown.Item href="#action4">
                 Another action
@@ -44,10 +44,10 @@ function NavBar() {
               <NavDropdown.Item href="#action5">
                 Something else here
               </NavDropdown.Item>
-            </NavDropdown> */}
+            </NavDropdown>
             
           </Nav>
-          {/* <Form className="d-flex">
+          <Form className="d-flex">
             <Form.Control
               type="search"
               placeholder="Search"
@@ -55,8 +55,8 @@ function NavBar() {
               aria-label="Search"
             />
             <Button variant="outline-success">Search</Button>
-          </Form> */}
-        </Navbar.Collapse>
+          </Form>
+        </Navbar.Collapse> */}
       </Container>
     </Navbar>
   );

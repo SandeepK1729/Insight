@@ -36,3 +36,11 @@
     transform: rotate(360deg);
   }
 }
+
+.componentClass, .sidebarClass {
+  display: inline;
+}
+
+.componentClass {
+  float: right;
+}
